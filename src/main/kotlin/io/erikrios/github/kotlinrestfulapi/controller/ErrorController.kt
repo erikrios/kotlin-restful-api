@@ -2,6 +2,7 @@ package io.erikrios.github.kotlinrestfulapi.controller
 
 import io.erikrios.github.kotlinrestfulapi.error.BadRequestException
 import io.erikrios.github.kotlinrestfulapi.error.NotFoundException
+import io.erikrios.github.kotlinrestfulapi.error.UnauthorizedException
 import io.erikrios.github.kotlinrestfulapi.model.WebResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -39,6 +40,16 @@ class ErrorController {
             code = HttpStatus.BAD_REQUEST.value(),
             status = HttpStatus.BAD_REQUEST.reasonPhrase,
             data = badRequestException.message.toString()
+        )
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(value = [UnauthorizedException::class])
+    fun unauthorized(unauthorizedException: UnauthorizedException): WebResponse<String> {
+        return WebResponse(
+            code = HttpStatus.UNAUTHORIZED.value(),
+            status = HttpStatus.UNAUTHORIZED.reasonPhrase,
+            data = unauthorizedException.message
         )
     }
 }
