@@ -21,7 +21,7 @@ class ProductController(val productService: ProductService) {
     fun createProduct(@RequestBody body: CreateProductRequest): WebResponse<ProductResponse> {
         val productResponse = productService.create(body)
 
-        return WebResponse<ProductResponse>(
+        return WebResponse(
             code = HttpStatus.OK.value(),
             status = HttpStatus.OK.name,
             data = productResponse
