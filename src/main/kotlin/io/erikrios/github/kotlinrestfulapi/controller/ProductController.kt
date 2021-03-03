@@ -19,7 +19,6 @@ class ProductController(val productService: ProductService) {
     )
     fun createProduct(@RequestBody body: CreateProductRequest): WebResponse<ProductResponse> {
         val productResponse = productService.create(body)
-
         return WebResponse(
             code = HttpStatus.OK.value(),
             status = HttpStatus.OK.reasonPhrase,
@@ -33,7 +32,6 @@ class ProductController(val productService: ProductService) {
     )
     fun getProduct(@PathVariable("idProduct") id: String): WebResponse<ProductResponse> {
         val productResponse = productService.get(id)
-
         return WebResponse(
             code = HttpStatus.OK.value(),
             status = HttpStatus.OK.reasonPhrase,
@@ -51,11 +49,23 @@ class ProductController(val productService: ProductService) {
         @RequestBody body: UpdateProductRequest
     ): WebResponse<ProductResponse> {
         val productResponse = productService.update(id, body)
-
         return WebResponse(
             code = HttpStatus.OK.value(),
             status = HttpStatus.OK.reasonPhrase,
             data = productResponse
+        )
+    }
+
+    @DeleteMapping(
+        value = ["/api/products/{idProduct}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun deleteProduct(@PathVariable("idProduct") id: String): WebResponse<String> {
+        val message = productService.delete(id)
+        return WebResponse(
+            code = HttpStatus.OK.value(),
+            status = HttpStatus.OK.reasonPhrase,
+            data = message
         )
     }
 }
