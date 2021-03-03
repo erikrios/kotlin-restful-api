@@ -1,9 +1,6 @@
 package io.erikrios.github.kotlinrestfulapi.controller
 
-import io.erikrios.github.kotlinrestfulapi.model.CreateProductRequest
-import io.erikrios.github.kotlinrestfulapi.model.ProductResponse
-import io.erikrios.github.kotlinrestfulapi.model.UpdateProductRequest
-import io.erikrios.github.kotlinrestfulapi.model.WebResponse
+import io.erikrios.github.kotlinrestfulapi.model.*
 import io.erikrios.github.kotlinrestfulapi.service.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -66,6 +63,22 @@ class ProductController(val productService: ProductService) {
             code = HttpStatus.OK.value(),
             status = HttpStatus.OK.reasonPhrase,
             data = message
+        )
+    }
+
+    @GetMapping(
+        value = ["/api/products"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun listProducts(
+        @RequestParam(value = "size", defaultValue = "10") size: Int,
+        @RequestParam(value = "page", defaultValue = "0") page: Int
+    ): WebResponse<List<ProductResponse>> {
+        val products = productService.list(ListProductRequest(page, size))
+        return WebResponse(
+            code = HttpStatus.OK.value(),
+            status = HttpStatus.OK.reasonPhrase,
+            data = products
         )
     }
 }
