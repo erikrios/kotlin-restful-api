@@ -6,9 +6,7 @@ import io.erikrios.github.kotlinrestfulapi.model.WebResponse
 import io.erikrios.github.kotlinrestfulapi.service.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class ProductController(val productService: ProductService) {
@@ -23,7 +21,21 @@ class ProductController(val productService: ProductService) {
 
         return WebResponse(
             code = HttpStatus.OK.value(),
-            status = HttpStatus.OK.name,
+            status = HttpStatus.OK.reasonPhrase,
+            data = productResponse
+        )
+    }
+
+    @GetMapping(
+        value = ["/api/products/{idProduct}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun getProduct(@PathVariable("idProduct") id: String): WebResponse<ProductResponse> {
+        val productResponse = productService.get(id)
+
+        return WebResponse(
+            code = HttpStatus.OK.value(),
+            status = HttpStatus.OK.reasonPhrase,
             data = productResponse
         )
     }
