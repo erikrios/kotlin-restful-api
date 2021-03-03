@@ -38,7 +38,7 @@ class ProductServiceImpl(
         val product = productRepository.findByIdOrNull(id)
         product?.let {
             return convertProductToProductResponse(it)
-        } ?: throw NotFoundException()
+        } ?: throw NotFoundException("Product with id $id not found.")
     }
 
     private fun convertProductToProductResponse(product: Product): ProductResponse {
