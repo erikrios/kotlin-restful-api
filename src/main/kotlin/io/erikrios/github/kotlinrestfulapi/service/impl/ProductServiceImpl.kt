@@ -4,6 +4,7 @@ import io.erikrios.github.kotlinrestfulapi.entity.Product
 import io.erikrios.github.kotlinrestfulapi.error.NotFoundException
 import io.erikrios.github.kotlinrestfulapi.model.CreateProductRequest
 import io.erikrios.github.kotlinrestfulapi.model.ProductResponse
+import io.erikrios.github.kotlinrestfulapi.model.UpdateProductRequest
 import io.erikrios.github.kotlinrestfulapi.repository.ProductRepository
 import io.erikrios.github.kotlinrestfulapi.service.ProductService
 import io.erikrios.github.kotlinrestfulapi.validation.ValidationUtil
@@ -37,6 +38,22 @@ class ProductServiceImpl(
     override fun get(id: String): ProductResponse {
         val product = productRepository.findByIdOrNull(id)
         product?.let {
+            return convertProductToProductResponse(it)
+        } ?: throw NotFoundException("Product with id $id not found.")
+    }
+
+    override fun update(id: String, updateProductRequest: UpdateProductRequest): ProductResponse {
+        validationUtil.validate(updateProductRequest)
+
+        val product = productRepository.findByIdOrNull(id)
+        product?.let {
+            it.apply {
+                name = updateProductRequest.name
+                price = updateProductRequest.price
+                quantity = updateProductRequest.quantity
+                updatedAt = Date()
+            }
+            productRepository.save(it)
             return convertProductToProductResponse(it)
         } ?: throw NotFoundException("Product with id $id not found.")
     }
