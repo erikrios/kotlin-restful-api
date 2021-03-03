@@ -1,5 +1,6 @@
 package io.erikrios.github.kotlinrestfulapi.controller
 
+import io.erikrios.github.kotlinrestfulapi.error.BadRequestException
 import io.erikrios.github.kotlinrestfulapi.error.NotFoundException
 import io.erikrios.github.kotlinrestfulapi.model.WebResponse
 import org.springframework.http.HttpStatus
@@ -28,6 +29,16 @@ class ErrorController {
             code = HttpStatus.NOT_FOUND.value(),
             status = HttpStatus.NOT_FOUND.reasonPhrase,
             data = notFoundException.message.toString()
+        )
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = [BadRequestException::class])
+    fun badRequest(badRequestException: BadRequestException): WebResponse<String> {
+        return WebResponse(
+            code = HttpStatus.BAD_REQUEST.value(),
+            status = HttpStatus.BAD_REQUEST.reasonPhrase,
+            data = badRequestException.message.toString()
         )
     }
 }
