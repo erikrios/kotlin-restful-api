@@ -7,7 +7,7 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.stereotype.Component
 
 @Component
-class ApiKeyConfiguration(val apiKeyRepository: ApiKeyRepository) : ApplicationRunner {
+class ApiKeySeeder(val apiKeyRepository: ApiKeyRepository) : ApplicationRunner {
 
     private val apiKey = "SECRET"
 
