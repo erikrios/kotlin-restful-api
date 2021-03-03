@@ -4,11 +4,13 @@ import io.erikrios.github.kotlinrestfulapi.entity.Product
 import io.erikrios.github.kotlinrestfulapi.error.BadRequestException
 import io.erikrios.github.kotlinrestfulapi.error.NotFoundException
 import io.erikrios.github.kotlinrestfulapi.model.CreateProductRequest
+import io.erikrios.github.kotlinrestfulapi.model.ListProductRequest
 import io.erikrios.github.kotlinrestfulapi.model.ProductResponse
 import io.erikrios.github.kotlinrestfulapi.model.UpdateProductRequest
 import io.erikrios.github.kotlinrestfulapi.repository.ProductRepository
 import io.erikrios.github.kotlinrestfulapi.service.ProductService
 import io.erikrios.github.kotlinrestfulapi.validation.ValidationUtil
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
@@ -63,6 +65,11 @@ class ProductServiceImpl(
         val product = findProductByIdOrThrowNotFound(id)
         productRepository.delete(product)
         return "Product with $id successfully deleted."
+    }
+
+    override fun list(listProductRequest: ListProductRequest): List<ProductResponse> {
+        val page = productRepository.findAll(PageRequest.of(listProductRequest.page, listProductRequest.size))
+        return page.content.map { convertProductToProductResponse(it) }
     }
 
     private fun findProductByIdOrThrowNotFound(id: String): Product {
