@@ -14,7 +14,7 @@ class ErrorController {
     fun validationHandler(constraintViolationException: ConstraintViolationException): WebResponse<String> {
         return WebResponse(
             code = HttpStatus.BAD_REQUEST.value(),
-            status = HttpStatus.BAD_REQUEST.name,
+            status = HttpStatus.BAD_REQUEST.reasonPhrase,
             data = constraintViolationException.message.toString()
         )
     }
