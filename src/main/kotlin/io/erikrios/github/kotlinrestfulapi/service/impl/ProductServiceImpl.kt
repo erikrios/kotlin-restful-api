@@ -1,6 +1,7 @@
 package io.erikrios.github.kotlinrestfulapi.service.impl
 
 import io.erikrios.github.kotlinrestfulapi.entity.Product
+import io.erikrios.github.kotlinrestfulapi.error.BadRequestException
 import io.erikrios.github.kotlinrestfulapi.error.NotFoundException
 import io.erikrios.github.kotlinrestfulapi.model.CreateProductRequest
 import io.erikrios.github.kotlinrestfulapi.model.ProductResponse
@@ -20,6 +21,10 @@ class ProductServiceImpl(
 
     override fun create(createProductRequest: CreateProductRequest): ProductResponse {
         validationUtil.validate(createProductRequest)
+
+        val isProductAlreadyExists = productRepository.existsById(createProductRequest.id)
+        if (isProductAlreadyExists)
+            throw BadRequestException("Product with id ${createProductRequest.id} already exists.")
 
         val product = Product(
             id = createProductRequest.id,
